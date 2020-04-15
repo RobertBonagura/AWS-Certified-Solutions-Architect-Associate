@@ -280,3 +280,80 @@ Can be used in conjunction with versioning (Differentiate lifecycle activity bet
 ---
 
 ## AWS Organizations & Consolidated Billing
+
+Can have cross acount access in S3 buckets. Only way to enable this is to turn on AWS Organizations.
+
+What is it?
+
+An account management service that enables you to consolidate multiple AWS accounts into an organization that you create and centrally manage.
+
+Allows multiple AWS accounts to be centrally managed.
+
+Can also do **consolidated billing**. The more storage you do, the less you pay. Therefore, allows you to aggregate all of your expenses.
+
+Advantages of Consolidated Billing:
+* One bill per AWS account
+* Very easy to track charges and allocate costs
+* Volume pricing discount
+
+## AWS Organizations & Consolidated Billing - Exam Tips
+
+Some Best Practices with AWS Organizations.
+* Always enable MFA on root account.
+* Always use a strong and complex password on the root account
+* Paying account should be used for billing purposes only. Do not deploy resources into the paying account.
+* Enable/Disable AWS services using Service Control Policies (SCP) either on Organizational Units (OU) or on individual accounts.
+    * For instance if you don't want the finance department to spin up EC2 instances, you disable EC2 using SCP's.
+
+## Sharing S3 Buckets Across Accounts
+
+There are three different ways to share S3 buckets across accounts:
+* Using Bucket Policies & IAM (applies across the entire bucket). Programmatic acccess only
+* Using Bucket Access Control List's (ACL's) & IAM (applies tp individual  objects). Programmatic access only.
+* Cross-account IAM Roles. Programmatic and Console access.
+
+Roles will be covered later in course, however note it is a way of granting temporary access to an AWS resource, from another service or by another AWS account.
+
+These can be created within IAM, which allow us to create a role for another AWS account by providing the account ID. Attaching policies to the role is what gives the role access to an AWS resource.
+
+## Sharing S3 Buckets Across Accounts - Exam Tips
+
+3 Different ways to share S3 buckets across accounts:
+* Using Bucket Policies & IAM (applies across the entire bucket). Programmatic access only.
+* Using Bucket ACL's & IAM (applies at the individual object level). Programmatic access only.
+* Cross-account IAM Roles. Programmatic AND Console access.
+
+## Cross Region Replication Lab
+
+Need to go into bucket >> Management >> Replication and click add rule. Cross Region Replicatin requires versioning to be enabled on the bucket.
+
+After clicking Add Rule, you can choose to replciate entire bucket OR prefix or tags.
+
+Then set Destination Bucket, where you can choose a bucket in this account or another. Can also choose to create a new one, in which it will ask for you to select a name and region. 
+
+May also change storage class and ownership for replicated bucket. 
+
+Then under configuration options, you will have to select an IAM role, which wll automatically create a Role allowing for S3 Cross Region Replication. 
+
+When we set up cross region replication, we will see it has the sinherited permissions as the bucket we replicated from but we can not see any objects in the bucket, and this is because when we set up cross region replication it is not going to transfer the items already in that bucket - these have to be uploaded manually.
+
+If you create a delete marker in your original bucket, it will not be replicated in the replicated bucket.
+
+## Cross Region Replication - Exam Tips
+* Versioning must be enabled on both source and destination buckets.
+* Files in an exisiting bucket are not replicated automatically.
+* All subsequent updated files will be replicated automatically.
+* Deleting individual versions or delete markers will not be replicated.
+* Understand what Cross Region Replicatin is at a high level.
+
+## Transfer Acceleration
+What is S3 Transfer Acceleration?
+
+It utilizes the CloudFront Network to accelerate your uploads to S3. 
+* Instead of uploading directly to your S3 bucket, you can use a distinct URL to upload directly to an edge location which will then transfer that file to S3. You will get a distinct URL to upload to.
+
+Amazon has built a tool to test that acceleration.
+
+---
+
+## CloudFront
