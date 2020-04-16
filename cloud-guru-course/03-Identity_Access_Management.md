@@ -213,7 +213,7 @@ Encryption At Rest is achieved by:
 * Service Side Encryption With Customer Provided Keys - SSE-C
     * Where you give your keys to Amazon that you manage
 
-There may also be Client Side Encryption where you encrypy the object and then upload it to S3.
+There may also be Client Side Encryption where you encrypt the object and then upload it to S3.
 
 To add encryption to an S3 bucket, just go into the AWS Console and select S3. Then select your S3 bucket and on the right-hand side of screen, click encryption to select a type.
 * Interesting to think about, what this does is mean that if someone were to break in to the AWS server and take a hard disk why my bucket stored on it, it would still be encrypted without the appropriate AWS encryption key.
@@ -356,4 +356,33 @@ Amazon has built a tool to test that acceleration.
 
 ---
 
-## CloudFront
+## CloudFront - Overview
+What is CloudFront?
+
+A content delivery network (CDN), which is a system of distributed servers (network) that delivers web pages and other web content to a user based on the geographical locations of the user, the origin of the webpage, and a content delivery network.
+
+## CloudFront - Key Terminology
+**Edge Location** - The location where content will be cached. This is seperate from an AWS Region/Availabiliy Zone.
+
+**Origin** - The origin of all of the files that the CDN will distribute. This can be an S3 Bucket, an EC2 instance, an Elastic Load Balancer, or Route53.
+
+**Distribution** - This is the name given to the CDN which consists of a collection of Edge Locations.
+
+There are two different types of Distributions:
+* **Web Distribution** - Typically used for Websites.
+* **RTMP** - Used for Adobe and Media Streaming.
+
+## CloudFront - How It Works
+
+Can be used to to deliver your entire website, including dynamic, static, streaming, and interactive content using a global network of edge locations. 
+
+Requests for your content are automatically routed to the nearest edge location, so content is delivered with the best possible performance.
+
+## CloudFront - Exam Tips
+Know the Key Terminology above.
+
+Edge locations are not just READ only - you can write to them to (i.e. put an object on to them). This is done during Transfer Acceleration.
+
+Objects are cached for the life of the **TTL (Time To Live)**.
+
+You can clear cached objects, you can invalidate an object, but you will be charged.
