@@ -386,3 +386,152 @@ Edge locations are not just READ only - you can write to them to (i.e. put an ob
 Objects are cached for the life of the **TTL (Time To Live)**.
 
 You can clear cached objects, you can invalidate an object, but you will be charged.
+
+## Create a CloudFront Distribution - Lab
+
+Listed under Network Content and Delivery. It is global, not under a specific region.
+
+After selecting a delivery method (web or RTMP), you go to create dstribution section where you set the Origin Domain Name, which in this lab is a bucket. Nearly everything in this lab is kept as default.
+
+TTL can be customized (Time to Live). Can also restrict Viewer Access as well using signed URLs or signed Cookies (think about only wanting subscribed users)
+
+After creating distribution, it can take up to 15 - 20 minutes. Same time span for disbling, which must be done before completely deleting.
+
+Once complete, copy the distribution domain name into browser, followed by whatever domain name that has been connected.
+
+Within setitngs, you can create invalidations to prevent some resource to being held within the CDN.
+
+---
+
+## Snowball 
+What is it?
+
+A petabyte-scale data transport solution that uses secure appliances to transfer large amounts of data into andn out of AWS. 
+
+Using Snowball addresses common challenges with large-scale data tansfers including high network costs, long transfer times, and security concers. Transfering data with Snowball is simple, fast, secure and can be as little as one-fifth the cost of high-speed internet.
+
+Snowball comes in either 50TB or 80TB sizes.
+
+Snowball uses multiple layers of security dsigned to protect your data including tamper-resistant enclosures, 256-bit encryption and an industry-standard Trust Platform Module (TPM) designed to ensure both security and full chain-of-custody of your data.
+
+Once the data transfer job has been processed and verified, AWS performs a software erasure of the Snowball appliance.
+
+## Snowball Edge
+
+AWS Snowball Edge is a 100TB data transfer device with on-board storage and compute capabilities. You can use Snowball Edge to move large amounts of data into and out of AWS, as a temporary storage tier for large local datasets or to support local workloads in remote or offline locations.
+
+It is like having a portable AWS.
+
+AWS Snowmobile is even more insane. Exa-byte scale data transfer service used to move extremely large services. A 45-foot long truck.
+
+## Snowball - Exam Tips
+
+Understand what Snowball is.
+
+Understand it can import and export from S3.
+
+If you have a question about moving a large amount of data into the cloud, just remember you would use snowball.
+
+---
+
+## Storage Gateway
+
+A service that connects an on-premise software appliance with cloud based storage to provide seamless and secure integration between an organization's on-premises IT environment and AWS's storage infrastructure.
+
+This enables you to securely store data to the AWS cloud for scalable and cost-effective storage.
+
+It si available for download as Virtual Machine image that you install on a host datacenter, it supports either VMware ESXi or Microsoft Hyper-V. 
+
+Then, you can connect to your AWS account through its activation process.
+
+There are three different types of Storage Gateway:
+* File Gateway (NFS & SMB) - basically a way of storing files in S3
+* Volume Gateway (iSCSI) - A way of storing copies of your hard disk drives or virtual hard disk drives
+    * Stored Volumes
+    * Cached Volumes
+* Tape Gateway (VTK) - which is a virtual tape library
+
+### File Gateway
+File are stored as objects in your S3 buckets.
+
+### Volume Gateway
+Follows iSCSI protocol
+
+Data written into these volumes can be asychronously backed up as point-in-time snapshots of your volumes, and stored in the cloud as Amazon EBS snapshots.
+
+Snapshots are incremental backups that capture only changed blocks. All snapshot storage is also compressed to minimize your storage charges.
+
+Basically a way of storing virtual hard drives in S3, while looking like EBS snapshots.
+
+#### Stored Volumes
+Allows you to store primary data locally, while backing that data to AWS.
+
+Note it is the entire data set. ....
+...
+
+#### Cached Volumes
+Doestn do entuere date set locally, only using frequently used data ...
+...
+
+Come back and review Volume Gateway if necessary.
+
+## Tape Gateway
+Back up tape cartridges... like VHS and cassette tapes?
+
+## Exam Tips
+Did not appear at all on Cloud Guru's recent exam version.
+
+File Gateway
+* File Gateway - For flat files, stored directly on S3
+
+Volume Gateway - using iSCSI.
+* Stored Volumes - Entire dataset is stored on site and is asynchronously backed up to S3.
+* Cached Volumes - Entiore dataset is stored on S3 and the most frequently accessed data is cached on site.
+
+Gateway Virtual Tape Library
+
+---
+
+## Athena vs Macie
+
+The following two services are often confused for one another. Though they share some similarities, they ar quite different.
+
+### Athena
+An interactive query service which enables you to analyze and query data located in S3 using standard SQL
+* Serverless, nothing to provision, pay per query / per TB scanned.
+* No need to set up complex Extract/Transform/Load (ETL) process
+
+Basically lets you turn S3 into a giant database
+
+What can Athena be used for?
+* Can be sued to query log files stored in S3, e.g. ELB logs, S3 access logs, etc
+* Generate business reports on data stored in S3
+* Analyse AWS cost and usage reports
+* Run queries on click-stream data
+
+### Macie
+What is PII (Personally Identifiable Information)?
+* Personal data used to establish an individual's identity.
+* Can include SSN, email, Home address, etc
+
+Macie is a security service that uses Machine Learning and NLP (Natural Language PRocessing) to discover, classify and protect sensitive data stored in S3.
+
+* Uses AI to recognize if your S3 objects contain sensitive data such as PII
+* Dashboards, reporting and alerts
+* Works directly with data stored innS3
+* Can also analyze CloudTrail logs
+* Great for PCI-DCS (if your taking credit cardpayments) and preventing ID theft.
+
+## Exam Tips
+### Athena
+* Athena is an interactive query service
+* It allows you to query data located in S3 using standard SQL
+* Serverless
+* Commonly used to analyse log data stored in S3
+
+### Macie
+* Macie uses AI to analyse data in S3 and helps identify PII
+* Can also be used to analyse CloudTrail logs for suspicous API activity
+* Includes Dashboards, Reports and Alerting
+* Great for PCI-DSS compliance and preventing ID theft
+
