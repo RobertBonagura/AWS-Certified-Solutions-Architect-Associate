@@ -1,4 +1,4 @@
-# Section 3 - Identitiy Access Management
+# Section 3 - Identitiy Access Management & S3
 ## What is IAM?
 Allows you to manage users and their level of access to the AWS console.
 
@@ -535,3 +535,164 @@ Macie is a security service that uses Machine Learning and NLP (Natural Language
 * Includes Dashboards, Reports and Alerting
 * Great for PCI-DSS compliance and preventing ID theft
 
+---
+
+## S3 & IAM Review
+
+### IAM
+Identity Access Management consists of the following:
+* Users
+* Groups
+* Roles
+* Policies
+
+Policies are applied to these three. Applying a policy to a group makes all users within that group inherit said polict automatically.
+
+IAM is universal. It does not apply to regions at this time.
+
+The root account is simply the account created when you first set up your AWS account, it has complete Admin access.
+* By default, new Users have NO permissions untill granted. Much like a new S3 bucket.
+
+New Users are assigned  Access Key ID & Seret Access Keys when first created. You can not use this to log into the console, however they can be used to to access AWS via APIs and Command Line.
+    * You can only view these once and must save them. If you lose them, you have to regenerate them so secure them in a safe place.
+
+Always use MFA on root account.
+
+Also, you can set custom rotating password policies.
+
+### S3
+
+Remember S3 us object based, allowing for files up to 5TB in size. There is unlimited storage and these files are stored in what are known as buckets.
+
+S3 is a universal namespace, so bucket names must be unique globally.
+
+It is object-based storing, so it is not suitable to store an OS or DBMS on.
+
+Successfull uploads will generate a HTTP 200 status code.
+
+By default, all newly credated buckets are PRIVTATE. You setup access control to your bucket using:
+* Bucket Policies
+* Access Control Lists
+
+S3 can be configured to create access logs, which will log all requests made to the S3 bucket. This can be sent to another bucket or even another bucket in another AWS account.
+
+The Key Fundamentals of S3 Are:
+* Key - the name of the object
+* Value - the data of teh file
+* Version ID - important for versioning
+* Metadata - Data about the data, such as tags
+* Subresources - such as Access Control Lists of Torrents
+
+Consistency model for S3
+* Read after Write consistency for PUTS of new Objects
+* Eventual Consistency for overwrite PUTS and DELETES (can take some time to propagate)
+
+You HAVE to understand the different S3 classes of storage:
+1. S3 Standard - What most people use
+2. S3 - IA (Infrequently Accessed) 
+    * For data that is accessed less frequently. Lower fee than S3, but you are charged a retrieval fee.
+3. S3 One Zone - IA
+    * For when you don't require multiple Availability Zone resilience.
+4. S3 - Intelligent Tiering
+    * Uses machine learning to choose the most cost-effective access tier.
+5. S3 Glacier - for data archival
+    * Can configure retrieval time from minutes to hours.
+6. S3 Glacier Deep Archive
+    * Configure retrieval time of 12 hours.
+
+Understand how to get the best value out of S3
+* S3 - Intelligent Tiering is typically best solution
+* S3 One Zone - IA is good only for data where data is not crucial because if you lose that zone that's it, youve lost your data.
+
+The order in which tiers are most to least expensive:
+1. S3 Standard
+2. S3 - IA
+3. S3 - Intelligent Tiering
+4. S3 One Zone - IA
+5. S3 Glacier
+6. S3 Glacier Deep Archive
+
+#### S3 Encryption 
+Encryption In Transit is achieved by SSL/TLS
+* Whenever you go into the console to upload files to S3, you will be connected via https.
+
+Encryption at Rest (Server Side) is achieved by
+    * S3 Managed Keys - SSE-S3
+    * AWS Key Management Service, Managed Keys - SSE-KMS    
+    * Server Side Encrypton with Customer Provided Keys - SSE-C
+
+Client Side Encryption exists where the user encrypts the object before uploading them to S3
+
+#### AWS Organizations
+Some best practices with AWS Organizations
+* Always enable MFA on root account.
+* Always use a strong anf complex password on root acount.
+* Paying account should be for billing purposes only. Do not deploy resources into the paying account.
+* Enable/Disable AWS services using Service Control Policies (SCP) either on OU (Organizational Units) or on individual accounts.
+
+Three different ways to share S3 buckets across accounts:
+1. Using Bucket Policies & IAM (applies accross entire bucket). Programmatic Access Only.
+2. Using Bucket ACLs & IAM (individual objects). Programmatic Access Only.
+3. Cross-account IAM Roles. Programmatic AND Cosnole roles.
+
+Cross-Region Replication - Just need to know what it is: A way of replicating objects accross regions.
+
+In order for this to work:
+* Versioning must be enabled on both the source and destination buckets.
+* Files in existing buckets are not replicated automatically.
+* However, all subsesequent updated files will be replicated automatically.
+* Delete markers are not replicated though.
+* Deleting individual versions or delete markers will not be replicated.
+* Understand what it is at a high-level
+
+#### Lifecycle Policies
+Automates movement between different storage tiers.
+
+Can be used in conjunction with versioning.
+
+Can be applied to current versions and previous versions.
+
+#### S3 Transfer Acceleration
+Users will upload files to edge locations and then to a bucket
+* Used if you need to increaase performance of users being able to upload files to S3
+
+#### CloudFront
+**Edge Location** - This is the location where content will be cached. This is seperate to an AWS Region/Availability Zone.
+
+**Origin** - This the origin of the files that the CDN will distribute. This can be either an S3 Bucket, EC2 Instance, an Elastic Load Balancer, or Route 53.
+
+**Distribution** - This is the name given to the CDN which consists of a collection of Edge Locations.
+* Web Distribution -  Used typically for Websites
+* RTMP - Used for Adobe Media Streaming
+
+Edge Locations are not READ only, you can write to them to.
+
+CloudFront objects are cached for the TTL. You can clear cached objects by invalidating them but you will be charged.
+
+#### Snowball
+Just understand what it is: A big disk used to move data in and out of the AWS cloud. Can be used to import/export to S3
+
+#### Storage Gateway
+File Gateway - used for flat files stored directly on S3
+
+Volume Gateway:
+* Stored Volumes - Entire dataset is stored on site and is asynchronously backed up to S3
+* Cached Volumes - Entire dataset is stored on S3 and only most frequently access data is cahced on site.
+
+Gateway Virtual Tape Library - Used for backing up tape
+
+#### Athena
+Just remember what it is and what it allows you to do:
+* An interactive query service that
+* Allows you to query data located in S3 using standard SQL
+* Serverless
+* Commonly used to analyse log stored in S3
+
+#### Macie
+* Uses AI to analyze data in S3 and helps identity PII (Personall Identifiable Information)
+* Can also be used to analye CloudTrail logs for suspcious API activity
+* Includees Dashboards, Reports and Alerting
+* Great for PCI-DSS compliance and ID theft
+
+#### Finally
+Read the S3 FAQs before taking the exam. S3 comes up A LOT.
