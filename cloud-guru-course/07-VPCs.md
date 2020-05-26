@@ -48,3 +48,24 @@ No more than 1 Availability Zone per Subnet
 Security Groups, are Stateful; Network Access Control Lists are Stateless
 
 There is no Transitive Peering
+
+## Build a Custom VPC Lab - Exam Tips
+When you create a VPC a default Route Table, Network Access Control List (NACL) and a default Security Group is created.
+* It will not create any subnets, nor will it create a default Internet Gateway.
+
+US-East-1a in your AWS account can be a completely different availability zone to US-East-1a in another AWS account. These are randomized.
+
+Amazon always reserves 5 IP addresses within your subnets
+
+You can only have 1 Internet Gateway per VPC.
+
+Security Groups can't span VPCs.
+
+## NAT Instances & NAT Gateways
+Network Address Translation
+
+In order EC2 instances in private subnets to still be able to download software, they need a way of communicating with the Internet Gateway without being made public.
+* NAT Instances and NAT Gateways are the solution to this
+
+NAT Instances are an EC2 Instance, and our on their way out. NAT Gateways are more popular now, and are a highly available gateway that allows you to have your private subnets communicate to the internet without being public.
+
